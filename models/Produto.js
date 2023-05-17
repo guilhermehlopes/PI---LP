@@ -6,13 +6,43 @@ constructor(id,descricao,preco,quantidade){
     this.quantidade = quantidade
 }
 }
+export const update = (id, produto) => {
+    const produtoToUpdate = findByPk(id)
+    if(!produtoToUpdate) {
+        return false
+    }
 
-export const getAll = () => {
-    return dbProduto
+    const index = dbProduto.indexOf(produtoToUpdate)
+    dbProduto[index] = produto
+    return true
 }
 
+export const destroy = (id) => {
+    const produto = findByPk(id)
+    if(!produto) {
+        return false
+    }
+    const index = dbProduto.indexOf(produto)
+    dbProduto.splice(index, 1)
+    return true
+}
+
+export const findByPk = (id) => {
+    return dbProduto.find(produto => produto.id === id)
+}
+
+export const create = (produto) => {
+    produto.id = dbProduto.length + 1
+    dbProduto.push(produto)
+}
+
+export const findAll = () => {
+    return dbProduto
+}
+ 
+
 export const dbProduto = [
-    new Produto(1,"Bolinha","R$5,00","100unid"),
-    new Produto(2,"quadrado","R$10,00","1000unid")
+    new Produto(1,"Produto 1", 3 , 100),
+    new Produto(2,"Produto 2", 2, 200)
 
 ]

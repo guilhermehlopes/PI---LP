@@ -1,4 +1,4 @@
-import { Cliente, create, destroy, getAll as findAll, findByPk, update } from "../models/Cliente.js"
+import { Cliente, create, destroy, findAll, findByPk, update } from "../models/Cliente.js"
 
 class ClienteController {
     static list(req,res){
@@ -18,10 +18,10 @@ class ClienteController {
 
         }
 
-static destroyContato(req,res){
+static destroyCliente(req,res){
     const id = parseInt(req.params.id)
-    const contato = findByPk(id)
-    if(!contato){
+    const cliente = findByPk(id)
+    if(!cliente){
         res.status(404).json({error:"Não encontrado"})
         return
     }
@@ -30,8 +30,8 @@ static destroyContato(req,res){
 }
 
     static createCliente(req,res){
-        const {nome, email, telefone} = req.body // req.body.nome, req.body.email ...
-        if(!nome || !email || !telefone){
+        const {id,nome,email,telefone,senha,endereco} = req.body // req.body.nome, req.body.email ...
+        if(!id || !nome || !email || !telefone || !senha || !endereco){
             res.status(400).json({error: "Informe todos os campos!"})
             return
         }
@@ -42,25 +42,28 @@ static destroyContato(req,res){
     }
     
 
-static updateContato(req,res){
-    const id = parseInt(req.params.id)
-    const cliente = findByPk(id)
+static updateCliente(req,res){
+    const idcliente = parseInt(req.params.id)
+    const cliente = findByPk(idcliente)
     if(!cliente){
         res.status(404).json({error:"Não encontrado"})
         return
     }
     
-    const {nome, email, telefone} = req.body // req.body.nome, req.body.email ...
-    if(!nome || !email || !telefone){
+    const {id,nome,email,telefone,senha,endereco} = req.body // req.body.nome, req.body.email ...
+    if(!id || !nome || !email || !telefone || !senha || !endereco){
         res.status(400).json({error: "Informe todos os campos!"})
         return
     }
 
+    cliente.id = id
     cliente.nome = nome
     cliente.email = email
     cliente.telefone = telefone
+    cliente.senha = senha
+    cliente.endereco = endereco
 
-    update(id,cliente)
+    update(idcliente,cliente)
     res.json(cliente)
     
 }
