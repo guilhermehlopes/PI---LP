@@ -1,4 +1,5 @@
 import express from 'express'
+import db from './db.js'
 import ClienteRouter from './routes/ClienteRoutes.js'
 import FornecedorRouter from './routes/FornecedorRoutes.js'
 import ProdutoRouter from './routes/ProdutoRoutes.js'
@@ -6,6 +7,7 @@ import ProdutoRouter from './routes/ProdutoRoutes.js'
 
 const app = express()
 app.use(express.json())
+db.sync(() => console.log('banco de dados preparado'))
 
 // npm i --save-dev nodemon
 // "dev"
@@ -14,7 +16,8 @@ app.use('/cliente',ClienteRouter)
 app.use('/fornecedor',FornecedorRouter)
 app.use('/produto',ProdutoRouter)
 
-app.listen(3000, () => {console.log('API Rodando na porta 3000!')})
+const port = process.env.PORT || 3000
+app.listen(port, () => {console.log('API Rodando na porta 3000!')})
 
 
 // consultar no firefox endereço seguinte (3000 porta definida) http://localhost:3000/cliente / http://localhost:3000/fornecedor / http://localhost:3000/produto

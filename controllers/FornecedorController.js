@@ -1,68 +1,61 @@
-import { Fornecedor, findAll } from "../models/Fornecedor.js"
+import Fornecedor from "../models/Fornecedor.js"
 
 class FornecedorController {
-    static list(req,res){
-        res.json(findAll())
+    static async list(req,res){
+        const fornecedores = await Fornecedor.findAll()
+        res.json(fornecedores)
     }
 
-    static getFornecedorById(req,res){
+    static async getFornecedorById(req,res){
         const id = parseInt(req.params.id)
-        const fornecedor = findByPk(id)
-        if(!fornecedor){
-            res.status(404).json({error:"Não encontrado"})
-            return
-}
+        const fornecedor = await Fornecedor.findByPk(id)
 
-res.json(fornecedor)
-
-    }
-
-    static destroyFornecedor(req,res){
-        const id = parseInt(req.params.id)
-        const fornecedor = findByPk(id)
-        if(!fornecedor){
-            res.status(404).json({error:"Não encontrado"})
-            return
-        }
-        destroy(id)
-        res.json({message: "Removido com sucesso!"})
-    }
-
-    static createFornecedor(req,res){
-        const {id,nome,email,telefone,endereco} = req.body // req.body.nome, req.body.email ...
-        if(!id ||!nome || !email || !telefone || !endereco){
-            res.status(400).json({error: "Informe todos os campos!"})
-            return
-        }
-
-        const fornecedor = new Fornecedor(0,id,nome,email,telefone,endereco)
-        const createFornecedor = create(fornecedor)
-        res.status(201).json(createFornecedor)
-    }
-    
-    static updateFornecedor(req,res){
-        const idfornecedor = parseInt(req.params.id)
-        const fornecedor = findByPk(idfornecedor)
         if(!fornecedor){
             res.status(404).json({error:"Não encontrado"})
             return
         }
         
-        const {id,nome,email,telefone,endereco} = req.body // req.body.nome, req.body.email ...
-        if(!id ||!nome || !email || !telefone || !endereco){
-            res.status(400).json({error: "Informe todos os campos!"})
-            return
-        }
-    
-        fornecedor.id = id
-        fornecedor.nome = nome
-        fornecedor.email = email
-        fornecedor.telefone = telefone
-        fornecedor.endereco = endereco
-    
-        update(idfornecedor,fornecedor)
         res.json(fornecedor)
+    }
+
+    static async destroyFornecedor(req,res){
+        const id = parseInt(req.params.id)
+        const fornecedor = await Fornecedor.findByPk(id)
+        if(!fornecedor){
+            res.status(404).json({error:"Não encontrado"})
+            return
+        }
+        await Fornecedor.destroy({where: {id: fornecedor.id}})
+        res.json({message: "Removido com sucesso!"})
+    }    
+
+    static async createFornecedor(req,res){
+        const {nome,email,telefone,endereco} = req.body // req.body.nome, req.body.email ...
+        if(!nome || !email || !telefone || !endereco){
+            res.status(400).json({error: "Informe todos os campos!"})
+            return
+        }
+
+        const createdFornecedor = await Fornecedor.create({nome,email,telefone,endereco}) //req.body
+        res.status(201).json(createdFornecedor)
+    }
+
+    static async updateFornecedor(req,res){
+        const id = parseInt(req.params.id)
+        const fornecedor = await Fornecedor.findByPk(id)
+        if(!fornecedor){
+            res.status(404).json({error:"Não encontrado"})
+            return
+        }
         
+        const {nome,email,telefone,endereco} = req.body // req.body.nome, req.body.email ...
+        if(!nome || !email || !telefone || !endereco){
+            res.status(400).json({error: "Informe todos os campos!"})
+            return
+        }
+
+        const updatedFornecedor = await Fornecedor.update({nome,email,telefone,endereco},{where: {id: fornecedor.id}})
+        res.json(updatedFornecedor)
     }
 }
 

@@ -1,74 +1,62 @@
-import { Cliente, create, destroy, findAll, findByPk, update } from "../models/Cliente.js"
+import Cliente from "../models/Cliente.js"
 
 class ClienteController {
-    static list(req,res){
-        res.json(findAll())
-
+    static async list(req,res){
+        const clientes = await Cliente.findAll()
+        res.json(clientes)
     }
 
-        static getClienteById(req,res){
-            const id = parseInt(req.params.id)
-            const cliente = findByPk(id)
-            if(!cliente){
-                res.status(404).json({error:"Não encontrado"})
-                return
-    }
+    static async getClienteById(req,res){
+        const id = parseInt(req.params.id)
+        const cliente = await Cliente.findByPk(id)
 
-    res.json(cliente)
-
+        if(!cliente){
+            res.status(404).json({error:"Não encontrado"})
+            return
         }
-
-static destroyCliente(req,res){
-    const id = parseInt(req.params.id)
-    const cliente = findByPk(id)
-    if(!cliente){
-        res.status(404).json({error:"Não encontrado"})
-        return
+        
+        res.json(cliente)
     }
-    destroy(id)
-    res.json({message: "Removido com sucesso!"})
-}
 
-    static createCliente(req,res){
-        const {id,nome,email,telefone,senha,endereco} = req.body // req.body.nome, req.body.email ...
-        if(!id || !nome || !email || !telefone || !senha || !endereco){
+    static async destroyCliente(req,res){
+        const id = parseInt(req.params.id)
+        const cliente = await Cliente.findByPk(id)
+        if(!cliente){
+            res.status(404).json({error:"Não encontrado"})
+            return
+        }
+        await Cliente.destroy({where: {id: cliente.id}})
+        res.json({message: "Removido com sucesso!"})
+    }    
+
+    static async createCliente(req,res){
+        const {nome,email,telefone,senha,endereco} = req.body // req.body.nome, req.body.email ...
+        if(!nome || !email || !telefone || !senha || !endereco){
             res.status(400).json({error: "Informe todos os campos!"})
             return
         }
 
-        const cliente = new Cliente(0,nome,email,telefone)
-        const createdCliente = create(cliente)
+        const createdCliente = await Cliente.create({nome,email,telefone,senha,endereco}) //req.body
         res.status(201).json(createdCliente)
     }
-    
 
-static updateCliente(req,res){
-    const idcliente = parseInt(req.params.id)
-    const cliente = findByPk(idcliente)
-    if(!cliente){
-        res.status(404).json({error:"Não encontrado"})
-        return
+    static async updateCliente(req,res){
+        const id = parseInt(req.params.id)
+        const cliente = await Cliente.findByPk(id)
+        if(!cliente){
+            res.status(404).json({error:"Não encontrado"})
+            return
+        }
+        
+        const {nome,email,telefone,senha,endereco} = req.body // req.body.nome, req.body.email ...
+        if(!nome || !email || !telefone || !senha || !endereco){
+            res.status(400).json({error: "Informe todos os campos!"})
+            return
+        }
+
+        const updatedCliente = await Cliente.update({nome,email,telefone,senha,endereco},{where: {id: cliente.id}})
+        res.json(updatedCliente)
     }
-    
-    const {id,nome,email,telefone,senha,endereco} = req.body // req.body.nome, req.body.email ...
-    if(!id || !nome || !email || !telefone || !senha || !endereco){
-        res.status(400).json({error: "Informe todos os campos!"})
-        return
-    }
-
-    cliente.id = id
-    cliente.nome = nome
-    cliente.email = email
-    cliente.telefone = telefone
-    cliente.senha = senha
-    cliente.endereco = endereco
-
-    update(idcliente,cliente)
-    res.json(cliente)
-    
 }
-}
-
-
 
 export default ClienteController
