@@ -31,14 +31,15 @@ class ProdutoController {
 
     static async createProduto(req,res){
         const {descricao,preco,quantidade} = req.body // req.body.nome, req.body.email ...
-        if(!descricao || !preco || !quantidade ||){
+        if(!descricao || !preco || !quantidade){
             res.status(400).json({error: "Informe todos os campos!"})
             return
         }
 
-        const createdProduto = await Produto.create({descricao,preco,quantidade}}) //req.body
+        const createdProduto = await Produto.create({descricao,preco,quantidade}) //req.body
         res.status(201).json(createdProduto)
     }
+    
 
     static async updateProduto(req,res){
         const id = parseInt(req.params.id)
@@ -49,7 +50,7 @@ class ProdutoController {
         }
         
         const {descricao,preco,quantidade} = req.body // req.body.nome, req.body.email ...
-        if(!descricao || !preco || !quantidade ||){
+        if(!descricao || !preco || !quantidade){
             res.status(400).json({error: "Informe todos os campos!"})
             return
         }
