@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize"
 import db from "../db.js"
-import Usuario from "./Usuario.js"
+//import Usuario from "./Usuario.js"
 
 const Cliente = db.define('cliente',{
     id: {
@@ -30,7 +30,7 @@ const Cliente = db.define('cliente',{
     }
 })
 
-Cliente.Usuario = Cliente.belongsTo(Usuario) 
+//Cliente.Usuario = Cliente.belongsTo(Usuario) 
 
 export default Cliente
 
