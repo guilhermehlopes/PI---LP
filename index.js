@@ -1,8 +1,10 @@
 import express from 'express'
 import db from './db.js'
+import cors from 'cors'
 import ClienteRouter from './routes/ClienteRoutes.js'
 import FornecedorRouter from './routes/FornecedorRoutes.js'
 import ProdutoRouter from './routes/ProdutoRoutes.js'
+
 
 
 const app = express()
@@ -12,6 +14,7 @@ db.sync(() => console.log('banco de dados preparado'))
 // npm i --save-dev nodemon
 // "dev"
 
+app.use (cors())
 app.use('/cliente',ClienteRouter)
 app.use('/fornecedor',FornecedorRouter)
 app.use('/produto',ProdutoRouter)
